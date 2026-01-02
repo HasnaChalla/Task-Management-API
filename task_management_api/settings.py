@@ -2,12 +2,12 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 from datetime import timedelta
+import dj_database_url
 
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = os.environ.get('LeMondeaCote2026+')
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-local-dev-key-12345')
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = [
     'task-management-api.onrender.com'
@@ -61,10 +61,10 @@ TEMPLATES = [
 WSGI_APPLICATION = 'task_management_api.wsgi.application'
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
