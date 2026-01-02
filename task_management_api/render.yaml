@@ -1,0 +1,27 @@
+# @format
+
+services:
+  - type: web
+    name: task-management-api
+    env: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn Task_Management_API.wsgi
+    envVars:
+      - key: SECRET_KEY
+        value: your-secret-key-here
+      - key: DEBUG
+        value: "False"
+      - key: PYTHON_VERSION
+        value: 3.12.1
+      - key: DATABASE_URL
+        fromDatabase:
+          name: task-db
+          property: connectionString
+
+  - type: postgresql
+    name: task-db
+    plan: free

@@ -16,8 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])
+def api_root(request):
+    return Response({
+        'message': 'Task Management API',
+        'endpoints': {
+            'admin': '/admin/',
+            'auth': '/api/auth/',
+            'tasks': '/api/tasks/',
+        }
+    })
 
 urlpatterns = [
+    path('', api_root),
     path('admin/', admin.site.urls),
     path('api/auth/', include('accounts.urls')),
     path('api/', include('tasks.urls')),
